@@ -1,60 +1,86 @@
 
-![Yen Photo](Images/unit-10-readme-photo.png)
+# Unit 11—Risky Business
+
+![Credit Risk](Images/credit-risk.jpg)
 
 ## Background
 
-The financial departments of large companies often deal with foreign currency transactions while doing international business. As a result, they are always looking for anything that can help them better understand the future direction and risk of various currencies. Hedge funds, too, are keenly interested in anything that will give them a consistent edge in predicting currency movements.
+Auto loans, mortgages, student loans, debt consolidation ... these are just a few examples of credit and loans that people are seeking online. Peer-to-peer lending services such as LendingClub or Prosper allow investors to loan other people money without the use of a bank. However, investors always want to mitigate risk, so you have been asked by a client to help them use machine learning techniques to predict credit risk.
 
-In this assignment, you will test the many time-series tools that you have learned in order to predict future movements in the value of the Japanese yen versus the U.S. dollar.
+In this assignment, you will build and evaluate several machine-learning models to predict credit risk using free data from LendingClub. Credit risk is an inherently imbalanced classification problem (the number of good loans is much larger than the number of at-risk loans), so you will need to employ different techniques for training and evaluating models with imbalanced classes. You will use the imbalanced-learn and Scikit-learn libraries to build and evaluate models using the two following techniques:
 
-You will gain proficiency in the following tasks:
-
-1. Time Series Forecasting
-2. Linear Regression Modeling
-
+1. [Resampling](#Resampling)
+2. [Ensemble Learning](#Ensemble-Learning)
 
 - - -
 
 ### Files
 
-[Time-Series Starter Notebook](Starter_Code/time_series_analysis.ipynb)
+[Resampling Starter Notebook](Starter_Code/credit_risk_resampling.ipynb)
 
-[Linear Regression Starter Notebook](Starter_Code/regression_analysis.ipynb)
+[Ensemble Starter Notebook](Starter_Code/credit_risk_ensemble.ipynb)
 
-[Yen Data CSV File](Starter_Code/yen.csv)
+[Lending Club Loans Data](Instructions/Resources/LoanStats_2019Q1.csv.zip)
 
 - - -
 
 ### Instructions
 
-#### Time-Series Forecasting
+#### Resampling
 
-In this notebook, you will load historical Dollar-Yen exchange rate futures data and apply time series analysis and modeling to determine whether there is any predictable behavior.
+You will use the [imbalanced learn](https://imbalanced-learn.readthedocs.io) library to resample the LendingClub data and build and evaluate logistic regression classifiers using the resampled data.
 
-Follow the steps outlined in the time-series starter notebook to complete the following:
+You will:
 
-1. Decomposition using a Hodrick-Prescott Filter (Decompose the Settle price into trend and noise).
-2. Forecasting Returns using an ARMA Model.
-3. Forecasting the Settle Price using an ARIMA Model.
-4. Forecasting Volatility with GARCH.
+1. Oversample the data using the `Naive Random Oversampler` and `SMOTE` algorithms.
+2. Undersample the data using the `Cluster Centroids` algorithm.
+3. Over- and under-sample using a combination `SMOTEENN` algorithm.
 
-Use the results of the time series analysis and modeling to answer the following questions:
+For each of the above, you will need to:
 
-1. Based on your time series analysis, would you buy the yen now?
-2. Is the risk of the yen expected to increase or decrease?
-3. Based on the model evaluation, would you feel confident in using these models for trading?
+1. Train a `logistic regression classifier` from `sklearn.linear_model` using the resampled data.
+2. Calculate the `balanced accuracy score` from `sklearn.metrics`.
+3. Calculate the `confusion matrix` from `sklearn.metrics`.
+4. Print the `imbalanced classification report` from `imblearn.metrics`.
 
+Use the above to answer the following:
 
-#### Linear Regression Forecasting
+> Which model had the best balanced accuracy score?
+>
+> Which model had the best recall score?
+>
+> Which model had the best geometric mean score?
 
-In this notebook, you will build a Scikit-Learn linear regression model to predict Yen futures ("settle") returns with *lagged* Yen futures returns and categorical calendar seasonal effects (e.g., day-of-week or week-of-year seasonal effects).
+#### Ensemble Learning
 
-Follow the steps outlined in the regression_analysis starter notebook to complete the following:
+In this section, you will train and compare two different ensemble classifiers to predict loan risk and evaluate each model. You will use the `balanced random forest classifier` and the `easy ensemble AdaBoost classifier`.
 
-1. Data Preparation (Creating Returns and Lagged Returns and splitting the data into training and testing data)
-2. Fitting a Linear Regression Model.
-3. Making predictions using the testing data.
-4. Out-of-sample performance.
-5. In-sample performance.
+Be sure to complete the following steps for each model:
 
-Use the results of the linear regression analysis and modeling to answer the following question:
+1. Train the model using the quarterly data from LendingClub provided in the `Resource` folder.
+2. Calculate the balanced accuracy score from `sklearn.metrics`.
+3. Print the confusion matrix from `sklearn.metrics`.
+4. Generate a classification report using the `imbalanced_classification_report` from imbalanced learn.
+5. For the balanced random forest classifier only, print the feature importance sorted in descending order (most important feature to least important) along with the feature score.
+
+Use the above to answer the following:
+
+> Which model had the best balanced accuracy score?
+>
+> Which model had the best recall score?
+>
+> Which model had the best geometric mean score?
+>
+> What are the top three features?
+
+- - -
+
+### Hints and Considerations
+
+Use the quarterly data from the LendingClub data that is provided in the `Resources` folder. Keep the file in the zipped format and use the starter code to read the file.
+
+Refer to the [imbalanced-learn](https://imbalanced-learn.readthedocs.io/en/stable/) and [scikit-learn](https://scikit-learn.org/stable/) official documentation for help with training the models. Remember that these models all use the model->fit->predict API.
+
+For the ensemble learners, use 100 estimators for both models.
+
+- - -
